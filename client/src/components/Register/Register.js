@@ -5,14 +5,17 @@ import { useHistory } from 'react-router-dom';
 const Register = ({ authenticateUser }) => {
   let history = useHistory();
   const [userData, setUserData] = useState({
-    name: '',
+    firstName: '',
+    lastName: '',
+    active: false,
+    hireDate: new Date(),
     email: '',
     password: '',
     passwordConfirm: ''
   });
   const [errorData, setErrorData] = useState({ errors: null });
 
-  const { name, email, password, passwordConfirm } = userData;
+  const { firstName, lastName, active, hireDate, email, password, passwordConfirm } = userData;
   const { errors } = errorData;
 
   const onChange = e => {
@@ -28,7 +31,10 @@ const Register = ({ authenticateUser }) => {
       console.log('Passwords do not match');
     } else {
       const newUser = {
-        name: name,
+        firstName: firstName,
+        lastName: lastName,
+        active: active,
+        hireDate: hireDate,
         email: email,
         password: password
       };
@@ -66,9 +72,35 @@ const Register = ({ authenticateUser }) => {
       <div>
         <input
           type="text"
-          placeholder="Name"
-          name="name"
-          value={name}
+          placeholder="First Name"
+          name="firstName"
+          value={firstName}
+          onChange={e => onChange(e)}
+        />
+      </div>
+      <div>
+        <input
+          type="text"
+          placeholder="Last Name"
+          name="lastName"
+          value={lastName}
+          onChange={e => onChange(e)}
+        />
+      </div>
+      <div>
+        <label for="active">Active</label>
+        <input
+          type="checkbox"
+          name="active"
+          value={active}
+          onChange={e => onChange(e)}
+        />
+      </div>
+      <div>
+        <input
+          type="date"
+          name="hireDate"
+          value={hireDate}
           onChange={e => onChange(e)}
         />
       </div>
