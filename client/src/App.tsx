@@ -38,10 +38,10 @@ class App extends React.Component {
       axios
         .get('/api/auth', config)
         .then(response => {
-          localStorage.setItem('user', response.data.name);
+          localStorage.setItem('user', response.data.firstName);
           this.setState(
             {
-              user: response.data.name,
+              user: response.data.firstName,
               token: token
             },
             () => {

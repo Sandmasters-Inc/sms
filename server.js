@@ -32,7 +32,10 @@ app.use(
 app.post(
   '/api/users',
   [
-    check('name', 'Please enter your name')
+    check('firstName', 'Please enter your first name')
+      .not()
+      .isEmpty(),
+    check('lastName', 'Please enter your last name')
       .not()
       .isEmpty(),
     check('email', 'Please enter a valid email').isEmail(),
@@ -46,7 +49,7 @@ app.post(
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
     } else {
-      const { name, email, password } = req.body;
+      const { firstName, lastName, email, password } = req.body;
       try {
         // Check if user exists
         let user = await User.findOne({ email: email });
@@ -58,7 +61,10 @@ app.post(
 
         // Create a new user
         user = new User({
-          name: name,
+          firstName: firstName,
+          lastName: lastName,
+          active: true,
+          hireDate: new Date(),
           email: email,
           password: password
         });
