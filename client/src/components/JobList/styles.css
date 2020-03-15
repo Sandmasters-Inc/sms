@@ -1,0 +1,25 @@
+.jobListItem {
+  padding: 10px;
+  border: solid 1px transparent;
+}
+
+.jobListItem:hover {
+  background-color: #eeeeee;
+  border-color: #aaaaaa;
+  cursor: pointer;
+}
+
+.jobListItem p {
+  max-width: 500px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.jobControls {
+  margin: 10px 0 10px 0;
+}
+
+.jobControls button {
+  margin-left: 10px;
+}

@@ -4,15 +4,15 @@ import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import './App.css';
 import Register from './components/Register/Register';
 import Login from './components/Login/Login';
-import PostList from './components/PostList/PostList';
-import Post from './components/Post/Post';
-import CreatePost from './components/Post/CreatePost';
-import EditPost from './components/Post/EditPost';
+import JobList from './components/JobList/JobList';
+import Job from './components/Job/Job';
+import CreateJob from './components/Job/CreateJob';
+import EditJob from './components/Job/EditJob';
 
 class App extends React.Component {
   state = {
-    posts: [],
-    post: null,
+    jobs: [],
+    job: null,
     token: null,
     user: null
   };
@@ -67,10 +67,10 @@ class App extends React.Component {
         }
       };
       axios
-        .get('/api/posts', config)
+        .get('/api/jobs', config)
         .then(response => {
           this.setState({
-            posts: response.data
+            jobs: response.data
           });
         })
         .catch(error => {
@@ -85,14 +85,14 @@ class App extends React.Component {
     this.setState({ user: null, token: null });
   };
 
-  viewPost = post => {
-    console.log(`view ${post.title}`);
+  viewJob = job => {
+    console.log(`view ${job.name}`);
     this.setState({
-      post: post
+      job: job
     });
   };
 
-  deletePost = post => {
+  deleteJob = job => {
     const { token } = this.state;
 
     if (token) {
@@ -103,47 +103,47 @@ class App extends React.Component {
       };
 
       axios
-        .delete(`/api/posts/${post._id}`, config)
+        .delete(`/api/jobs/${job._id}`, config)
         .then(response => {
-          const newPosts = this.state.posts.filter(p => p._id !== post._id);
+          const newJobs = this.state.jobs.filter(p => p._id !== job._id);
           this.setState({
-            posts: [...newPosts]
+            jobs: [...newJobs]
           });
         })
         .catch(error => {
-          console.error(`Error deleting post: ${error}`);
+          console.error(`Error deleting job: ${error}`);
         });
     }
   };
 
-  editPost = post => {
+  editJob = job => {
     this.setState({
-      post: post
+      job: job
     });
   };
 
-  onPostCreated = post => {
-    const newPosts = [...this.state.posts, post];
+  onJobCreated = job => {
+    const newJobs = [...this.state.jobs, job];
 
     this.setState({
-      posts: newPosts
+      jobs: newJobs
     });
   };
 
-  onPostUpdated = post => {
-    console.log('updated post: ', post);
-    const newPosts = [...this.state.posts];
-    const index = newPosts.findIndex(p => p._id === post._id);
+  onJobUpdated = job => {
+    console.log('updated job: ', job);
+    const newJobs = [...this.state.jobs];
+    const index = newJobs.findIndex(p => p._id === job._id);
 
-    newPosts[index] = post;
+    newJobs[index] = job;
 
     this.setState({
-      posts: newPosts
+      jobs: newJobs
     });
   };
 
   render() {
-    let { user, posts, post, token } = this.state;
+    let { user, jobs, job, token } = this.state;
     const authProps = {
       authenticateUser: this.authenticateUser
     };
@@ -159,7 +159,7 @@ class App extends React.Component {
               </li>
               <li>
                 {user ? (
-                  <Link to="/new-post">New Job</Link>
+                  <Link to="/new-job">New Job</Link>
                 ) : (
                   <Link to="/register">Register</Link>
                 )}
@@ -181,28 +181,28 @@ class App extends React.Component {
                 {user ? (
                   <React.Fragment>
                     <div>Hello {user}!</div>
-                    <PostList
-                      posts={posts}
-                      clickPost={this.viewPost}
-                      deletePost={this.deletePost}
-                      editPost={this.editPost}
+                    <JobList
+                      jobs={jobs}
+                      clickJob={this.viewJob}
+                      deleteJob={this.deleteJob}
+                      editJob={this.editJob}
                     />
                   </React.Fragment>
                 ) : (
                   <React.Fragment>Please Register or Login</React.Fragment>
                 )}
               </Route>
-              <Route path="/posts/:postId">
-                <Post post={post} />
+              <Route path="/jobs/:jobId">
+                <Job job={job} />
               </Route>
-              <Route path="/new-post">
-                <CreatePost token={token} onPostCreated={this.onPostCreated} />
+              <Route path="/new-job">
+                <CreateJob token={token} onJobCreated={this.onJobCreated} />
               </Route>
-              <Route path="/edit-post/:postId">
-                <EditPost
+              <Route path="/edit-job/:jobId">
+                <EditJob
                   token={token}
-                  post={post}
-                  onPostUpdated={this.onPostUpdated}
+                  job={job}
+                  onJobUpdated={this.onJobUpdated}
                 />
               </Route>
               <Route
