@@ -6,7 +6,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import config from 'config';
 import User from './models/User';
-import Post from './models/Post';
+import Job from './models/Job';
 import auth from './middleware/auth';
 import path from 'path';
 
@@ -158,20 +158,17 @@ const returnToken = (user, res) => {
   );
 };
 
-// Post endpoints
+// Job endpoints
 /**
- * @route POST api/posts
- * @desc Create post
+ * @route POST api/jobs
+ * @desc Create job
  */
 app.post(
-  '/api/posts',
+  '/api/jobs',
   [
     auth,
     [
-      check('title', 'Title text is required')
-        .not()
-        .isEmpty(),
-      check('body', 'Body text is required')
+      check('name', 'Job name is required')
         .not()
         .isEmpty()
     ]
@@ -181,22 +178,60 @@ app.post(
     if (!errors.isEmpty()) {
       res.status(400).json({ errors: errors.array() });
     } else {
-      const { title, body } = req.body;
+      const { 
+        active,
+        name,
+        street,
+        city,
+        state,
+        zip,
+        approvedUser,
+        //createdUser -- derived from request user below
+        createdDate,
+        inquiryDate,
+        inspectionDate,
+        followUpDate,
+        tentativeDate,
+        scheduledDate,
+        completedDate,
+        status,
+        primaryType,
+        notes,
+        inspector,
+        payTerms
+      } = req.body;
       try {
-        // Get the user who created the post
+        // Get the user who created the job
         const user = await User.findById(req.user.id);
 
-        // Create a new post
-        const post = new Post({
-          user: user.id,
-          title: title,
-          body: body
+        // Create a new job
+        const job = new Job({
+          active: active,
+          name: name,
+          street: street,
+          city: city,
+          state: state,
+          zip: zip,
+          approvedUser: approvedUser,
+          createdUser: user.id,
+          createdDate: createdDate,
+          inquiryDate: inquiryDate,
+          inspectionDate: inspectionDate,
+          followUpDate: followUpDate,
+          tentativeDate: tentativeDate,
+          scheduledDate: scheduledDate,
+          completedDate: completedDate,
+          status: status,
+          primaryType: primaryType,
+          notes: notes, 
+          inspector: inspector,
+          payTerms: payTerms
         });
 
         // Save to the db and return
-        await post.save();
+        await job.save();
 
-        res.json(post);
+        res.json(job);
       } catch (error) {
         console.error(error);
         res.status(500).send('Server error');
@@ -206,14 +241,14 @@ app.post(
 );
 
 /**
- * @route GET api/posts
- * @desc Get posts
+ * @route GET api/jobs
+ * @desc Get jobs
  */
-app.get('/api/posts', auth, async (req, res) => {
+app.get('/api/jobs', auth, async (req, res) => {
   try {
-    const posts = await Post.find().sort({ date: -1 });
+    const jobs = await Job.find().sort({ createdDate: -1 });
 
-    res.json(posts);
+    res.json(jobs);
   } catch (error) {
     console.error(error);
     res.status(500).send('Server error');
@@ -221,19 +256,19 @@ app.get('/api/posts', auth, async (req, res) => {
 });
 
 /**
- * @route GET api/posts/:id
- * @desc Get post
+ * @route GET api/jobs/:id
+ * @desc Get job
  */
-app.get('/api/posts/:id', auth, async (req, res) => {
+app.get('/api/jobs/:id', auth, async (req, res) => {
   try {
-    const post = await Post.findById(req.params.id);
+    const job = await Job.findById(req.params.id);
 
-    // Make sure the post was found
-    if (!post) {
-      return res.status(404).json({ msg: 'Post not found' });
+    // Make sure the job was found
+    if (!job) {
+      return res.status(404).json({ msg: 'Job not found' });
     }
 
-    res.json(post);
+    res.json(job);
   } catch (error) {
     console.error(error);
     res.status(500).send('Server error');
@@ -241,26 +276,26 @@ app.get('/api/posts/:id', auth, async (req, res) => {
 });
 
 /**
- * @route DELETE api/posts/:id
- * @desc Delete a post
+ * @route DELETE api/jobs/:id
+ * @desc Delete a job
  */
-app.delete('/api/posts/:id', auth, async (req, res) => {
+app.delete('/api/jobs/:id', auth, async (req, res) => {
   try {
-    const post = await Post.findById(req.params.id);
+    const job = await Job.findById(req.params.id);
 
-    // Make sure the post was found
-    if (!post) {
-      return res.status(404).json({ msg: 'Post not found' });
+    // Make sure the job was found
+    if (!job) {
+      return res.status(404).json({ msg: 'Job not found' });
     }
 
-    // Make sure the request user created the post
-    if (post.user.toString() !== req.user.id) {
+    // Make sure the request user created the job
+    if (job.createdUser.toString() !== req.user.id) {
       return res.status(401).json({ msg: 'User not authorized' });
     }
 
-    await post.remove();
+    await job.remove();
 
-    res.json({ msg: 'Post removed' });
+    res.json({ msg: 'Job removed' });
   } catch (error) {
     console.error(error);
     res.status(500).send('Server error');
@@ -268,31 +303,70 @@ app.delete('/api/posts/:id', auth, async (req, res) => {
 });
 
 /**
- * @route PUT api/posts/:id
- * @desc Update a post
+ * @route PUT api/jobs/:id
+ * @desc Update a job
  */
-app.put('/api/posts/:id', auth, async (req, res) => {
+app.put('/api/jobs/:id', auth, async (req, res) => {
   try {
-    const { title, body } = req.body;
-    const post = await Post.findById(req.params.id);
+    const { 
+      active, 
+      name,
+      street,
+      city,
+      state,
+      zip,
+      approvedUser,
+      createdUser,
+      createdDate,
+      inquiryDate,
+      inspectionDate,
+      followUpDate,
+      tentativeDate,
+      scheduledDate,
+      completedDate,
+      status,
+      primaryType,
+      notes,
+      inspector,
+      payTerms
+    } = req.body;
+    const job = await Job.findById(req.params.id);
 
-    // Make sure the post was found
-    if (!post) {
-      return res.status(404).json({ msg: 'Post not found' });
+    // Make sure the job was found
+    if (!job) {
+      return res.status(404).json({ msg: 'Job not found' });
     }
 
-    // Make sure the request user created the post
-    if (post.user.toString() !== req.user.id) {
+    // Make sure the request user created the job
+    if (job.createdUser.toString() !== req.user.id) {
       return res.status(401).json({ msg: 'User not authorized' });
     }
 
-    // Update the post and return
-    post.title = title || post.title;
-    post.body = body || post.body;
+    // Update the job and return
+    job.active = active || job.active;
+    job.name = name || job.name,
+    job.street = street || job.street,
+    job.city = city || job.city,
+    job.state = state || job.state,
+    job.zip = zip || job.zip,
+    job.approvedUser = approvedUser || job.approvedUser,
+    job.createdUser = createdUser || job.createdUser,
+    job.createdDate = createdDate || job.createdDate,
+    job.inquiryDate = inquiryDate || job.inquiryDate,
+    job.inspectionDate = inspectionDate || job.inspectionDate,
+    job.followUpDate = followUpDate || job.followUpDate,
+    job.tentativeDate = tentativeDate || job.tentativeDate,
+    job.scheduledDate = scheduledDate || job.scheduledDate,
+    job.completedDate = completedDate || job.completedDate,
+    job.status = status || job.status,
+    job.primaryType = primaryType || job.primaryType,
+    job.notes = notes || job.notes,
+    job.inspector = inspector || job.inspector,
+    job.payTerms = payTerms || job.payTerms
 
-    await post.save();
+    await job.save();
 
-    res.json(post);
+    res.json(job);
   } catch (error) {
     console.error(error);
     res.status(500).send('Server error');

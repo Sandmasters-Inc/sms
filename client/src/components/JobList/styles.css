@@ -1,25 +1,25 @@
-.postListItem {
+.jobListItem {
   padding: 10px;
   border: solid 1px transparent;
 }
 
-.postListItem:hover {
+.jobListItem:hover {
   background-color: #eeeeee;
   border-color: #aaaaaa;
   cursor: pointer;
 }
 
-.postListItem p {
+.jobListItem p {
   max-width: 500px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.postControls {
+.jobControls {
   margin: 10px 0 10px 0;
 }
 
-.postControls button {
+.jobControls button {
   margin-left: 10px;
 }
