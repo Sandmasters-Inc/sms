@@ -7,6 +7,7 @@ import jwt from 'jsonwebtoken';
 import config from 'config';
 import User from './models/User';
 import Job from './models/Job';
+import Customer from './models/Customer';
 import auth from './middleware/auth';
 import path from 'path';
 
@@ -372,6 +373,187 @@ app.put('/api/jobs/:id', auth, async (req, res) => {
     res.status(500).send('Server error');
   }
 });
+
+// Customer endpoints
+/**
+ * @route POST api/customers
+ * @desc Create customer
+ */
+app.post(
+  '/api/customers',
+  [
+    auth,
+    [
+      check('name', 'Customer name is required')
+        .not()
+        .isEmpty()
+    ]
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(400).json({ errors: errors.array() });
+    } else {
+      const {
+        name,
+        firstName,
+        lastName,
+        company,
+        address,
+        city,
+        state,
+        zip,
+        businessType,
+        phoneNumbers,
+        email,
+        referredBy,
+        adSource,
+        useMeAsReference
+      } = req.body;
+      try {
+        // Get the user who created the customer
+        const user = await User.findById(req.user.id);
+
+        // Create a new customer
+        const customer = new Customer({
+          name,
+          firstName,
+          lastName,
+          company,
+          address,
+          city,
+          state,
+          zip,
+          businessType,
+          phoneNumbers,
+          email,
+          referredBy,
+          adSource,
+          useMeAsReference
+        });
+
+        // Save to the db and return
+        await customer.save();
+
+        res.json(customer);
+      } catch(error) {
+        console.error(error);
+        res.status(500).send('Server error');
+      }
+    }
+  }
+)
+
+/**
+ * @route GET api/customers
+ * @desc Get customers
+ */
+app.get('/api/customers', auth, async (req, res) => {
+  try {
+    const customers = await Customer.find()
+    res.json(customers)
+  } catch (error) {
+    console.error(error)
+    res.status(500).send('Server error')
+  }
+})
+
+/**
+ * @route GET api/customers/:id
+ * @desc Get customer
+ */
+app.get('/api/customers/:id', auth, async (req, res) => {
+  try {
+    const customer = await Customer.findById(req.params.id)
+
+    // Make sure the customer was found
+    if (!customer) {
+      return res.status(404).json({ msg: 'Customer not found' })
+    }
+
+    res.json(customer)
+  } catch (error) {
+    console.error(error)
+    res.status(500).send('Server error')
+  }
+})
+
+/**
+ * @route DELETE api/customers/:id
+ * @desc Delete a customer
+ */
+app.delete('/api/customers/:id', auth, async(req, res) => {
+  try {
+    const customer = Customer.findById(req.params.id)
+
+    // Make sure the customer was found
+    if (!customer) {
+      return res.status(404).json({ msg: 'Customer not found' })
+    } 
+  
+    // todo: Make sure the request user has permission to delete customers
+    await customer.remove()
+    res.json({ msg: 'Customer removed' })
+  } catch (error) {
+    console.error(error)
+    res.status(500).send('Server error')
+  }
+})
+
+/**
+ * @route PUT api/customers/:id
+ * @desc Update a customer
+ */
+app.put('/api/customers/:id', auth, async(req, res) => {
+  try {
+    const {
+      name,
+      firstName,
+      lastName,
+      company,
+      address,
+      city,
+      state,
+      zip,
+      businessType,
+      phoneNumbers,
+      email,
+      referredBy,
+      adSource,
+      useMeAsReference
+    } = req.body
+    const customer = await Customer.findById(req.params.id)
+
+    // Make sure the customer was found
+    if (!customer) {
+      return res.status(404).json({ msg: 'Customer not found' })
+    }
+
+    // todo: Make sure the request user can update customers
+
+    // Update the customer and return
+    customer.name = name || customer.name;
+    customer.firstName = firstName || customer.firstName;
+    customer.lastName = lastName || customer.lastName;
+    customer.company = company || customer.company;
+    customer.address = address || customer.address;
+    customer.city = city || customer.city;
+    customer.state = state || customer.state;
+    customer.zip = zip || customer.zip;
+    customer.businessType = businessType || customer.businessType;
+    customer.phoneNumbers = phoneNumbers || customer.phoneNumbers;
+    customer.email = email || customer.email;
+    customer.referredBy = referredBy || customer.referredBy;
+    customer.adSource = adSource || customer.adSource;
+    customer.useMeAsReference = useMeAsReference || customer.useMeAsReference;
+
+    await customer.save()
+    res.json(customer)
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server error')
+  }
+})
 
 // Serve build files in production
 if (process.env.NODE_ENV === 'production') {
