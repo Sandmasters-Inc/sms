@@ -22,7 +22,7 @@ const JobListItem = props => {
   return (
     <div>
       <div className="jobListItem" onClick={() => handleClickJob(job)}>
-        <h2>{job.name}</h2>
+        Job: {job.name}
       </div>
       <div className="jobControls">
         <button onClick={() => deleteJob(job)}>Delete</button>
