@@ -8,9 +8,12 @@ import JobList from './components/JobList/JobList';
 import Job from './components/Job/Job';
 import CreateJob from './components/Job/CreateJob';
 import EditJob from './components/Job/EditJob';
+import { CustomerList } from './components/CustomerList'
+import { CreateCustomer } from './components/Customer';
 
 class App extends React.Component {
   state = {
+    customers: [],
     jobs: [],
     job: null,
     token: null,
@@ -58,6 +61,11 @@ class App extends React.Component {
   };
 
   loadData = () => {
+    this.loadJobs()
+    this.loadCustomers()
+  }
+
+  loadJobs = () => {
     const { token } = this.state;
 
     if (token) {
@@ -74,10 +82,32 @@ class App extends React.Component {
           });
         })
         .catch(error => {
-          console.error(`Error fetching data: ${error}`);
+          console.error(`Error fetching jobs: ${error}`);
         });
     }
-  };
+  }
+
+  loadCustomers = () => {
+    const { token } = this.state;
+
+    if (token) {
+      const config = {
+        headers: {
+          'x-auth-token': token
+        }
+      };
+      axios
+        .get('/api/customers', config)
+        .then(response => {
+          this.setState({
+            customers: response.data
+          });
+        })
+        .catch(error => {
+          console.error(`Error fetching customers: ${error}`);
+        });
+    }
+  }
 
   logOut = () => {
     localStorage.removeItem('token');
@@ -142,8 +172,16 @@ class App extends React.Component {
     });
   };
 
+  onCustomerCreated = customer => {
+    const newCustomers = [...this.state.customers, customer]
+
+    this.setState({
+      customers: newCustomers
+    })
+  }
+
   render() {
-    let { user, jobs, job, token } = this.state;
+    let { user, jobs, job, customers, token } = this.state;
     const authProps = {
       authenticateUser: this.authenticateUser
     };
@@ -156,40 +194,44 @@ class App extends React.Component {
             <ul>
               <li>
                 <Link to="/">Home</Link>
-              </li>
-              <li>
-                {user ? (
-                  <Link to="/new-job">New Job</Link>
-                ) : (
-                  <Link to="/register">Register</Link>
-                )}
-              </li>
-              <li>
-                {user ? (
-                  <Link to="" onClick={this.logOut}>
-                    Log out
-                  </Link>
-                ) : (
-                  <Link to="/login">Log in</Link>
-                )}
-              </li>
+              </li>         
+              {user && (
+                <>
+                <li><Link to="/new-customer">New Customer</Link></li>
+                <li><Link to="/new-job">New Job</Link></li>
+                </>
+              )}      
+              {user ? (
+                <li><Link to="" onClick={this.logOut}>Log out</Link></li>
+              ) : (
+                <>
+                <li><Link to="/register">Register</Link></li>
+                <li><Link to="/login">Log in</Link></li>
+                </>
+              )}
             </ul>
           </header>
           <main>
             <Switch>
               <Route exact path="/">
                 {user ? (
-                  <React.Fragment>
+                  <>
                     <div>Hello {user}!</div>
+                    <h2>Jobs</h2>
                     <JobList
                       jobs={jobs}
                       clickJob={this.viewJob}
                       deleteJob={this.deleteJob}
                       editJob={this.editJob}
                     />
-                  </React.Fragment>
+
+                    <h2>Customers</h2>
+                    <CustomerList
+                      customers={customers}
+                    />
+                  </>
                 ) : (
-                  <React.Fragment>Please Register or Login</React.Fragment>
+                  <>Please Register or Login</>
                 )}
               </Route>
               <Route path="/jobs/:jobId">
@@ -204,6 +246,10 @@ class App extends React.Component {
                   job={job}
                   onJobUpdated={this.onJobUpdated}
                 />
+              </Route>
+              <Route path="/new-customer">
+                {/* <CreateCustomerTest /> */}
+                <CreateCustomer token={token} onCustomerCreated={this.onCustomerCreated} />
               </Route>
               <Route
                 exact
