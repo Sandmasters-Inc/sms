@@ -1,6 +1,24 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
+import styled from 'styled-components'
+import { TextInput } from '../Inputs'
+import { Button } from '../Button'
+import { capitalize, separate } from '../../utils/StringUtils'
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  max-width: 500px;
+  margin: 0 auto;
+`
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+  width: 500px;
+`
 
 const Login = ({ authenticateUser }) => {
   let history = useHistory();
@@ -53,34 +71,34 @@ const Login = ({ authenticateUser }) => {
     authenticateUser();
   };
 
+  const makeInput = (name, field) => {
+    let formattedName = capitalize(name)
+    formattedName = separate(formattedName)
+
+    return (
+      <TextInput
+        name={name}
+        label={formattedName}
+        value={field}
+        onChange={e => onChange(e)}
+      />
+    )
+  }
+
   return (
-    <div>
-      <h2>Log In</h2>
-      <div>
-        <input
-          type="text"
-          placeholder="Email"
-          name="email"
-          value={email}
-          onChange={e => onChange(e)}
-        />
-      </div>
-      <div>
-        <input
-          type="text"
-          placeholder="Password"
-          name="password"
-          value={password}
-          onChange={e => onChange(e)}
-        />
-      </div>
-      <div>
-        <button onClick={() => loginUser()}>Log In</button>
-      </div>
-      <div>
-        {errors && errors.map(error => <div key={error.msg}>{error.msg}</div>)}
-      </div>
-    </div>
+    <Container>
+      <h1>Log In</h1>
+      {makeInput("email", email)}
+      {makeInput("password", password)}
+      <ButtonContainer>
+        <div>
+          <Button onClick={() => loginUser()}>Log In</Button>
+        </div>
+        <div>
+          {errors && errors.map(error => <div key={error.msg}>{error.msg}</div>)}
+        </div>
+      </ButtonContainer>
+    </Container>
   );
 };
 
