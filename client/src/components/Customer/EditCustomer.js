@@ -7,7 +7,7 @@ export const EditCustomer = ({ token, customer, onCustomerUpdated }) => {
   let history = useHistory()
 
   const update = async (updatedCustomer) => {
-    if (!customer.name) {
+    if (!updatedCustomer.name) {
       console.log('Customer name is required')
     } else {
       const newCustomer = {
@@ -49,6 +49,6 @@ export const EditCustomer = ({ token, customer, onCustomerUpdated }) => {
   }
 
   return (
-    <CustomerForm customer={customer} onComplete={update} />
+    <CustomerForm customer={customer} formTitle="Edit Customer" onComplete={update} />
   )
 }

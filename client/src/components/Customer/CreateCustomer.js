@@ -49,6 +49,6 @@ export const CreateCustomer = ({ token, onCustomerCreated}) => {
   }
 
   return (
-    <CustomerForm onComplete={create} />
+    <CustomerForm formTitle="New Customer" onComplete={create} />
   )
 }

@@ -18,7 +18,7 @@ const ButtonContainer = styled.div`
   width: 500px;
 `
 
-export const CustomerForm = ({ customer, onComplete }) => {
+export const CustomerForm = ({ customer, formTitle, onComplete }) => {
   const [customerData, setCustomerData] = useState(() => {
     return customer ? 
     {
@@ -97,6 +97,7 @@ export const CustomerForm = ({ customer, onComplete }) => {
 
   return (
     <Container>
+      <h1>{formTitle}</h1>
       {makeInput("name", name)}
       {makeInput("firstName", firstName)}
       {makeInput("lastName", lastName)}
