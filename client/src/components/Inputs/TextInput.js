@@ -21,25 +21,34 @@ const StyledText = styled(Text)`
   bottom: -3em;
 `
 
+const StyledLabel = styled.label`
+  color: #696969;
+  font-size: 10px;
+`
+
 export const TextInput = ({
   htmlId,
   name,
   type = 'text',
   onChange,
   placeholder,
+  label,  
   value,
   error,
   children,
   ...rest
 }) => (
   <Flex flexDirection="column">
+  <Box>
+    {label && <StyledLabel>{label}</StyledLabel>}
+  </Box>
     <Flex>
       <Box flex="1">
         <StyledInput
           id={htmlId}
           type={type}
           name={name}
-          placeholder={placeholder}
+          placeholder={placeholder || ''}
           value={value}
           onChange={onChange}
           {...rest}
@@ -62,6 +71,7 @@ TextInput.propTypes = {
   type: PropTypes.oneOf(['text', 'number', 'password']),
   onChange: PropTypes.func.isRequired,
   placeholder: PropTypes.string,
+  label: PropTypes.string,
   value: PropTypes.any,
   error: PropTypes.string,
   children: PropTypes.node
