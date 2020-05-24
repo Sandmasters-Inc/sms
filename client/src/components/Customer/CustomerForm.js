@@ -81,12 +81,13 @@ export const CustomerForm = ({ customer, formTitle, onComplete }) => {
     })
   }
 
-  const makeInput = (name, field) => {
+  const makeInput = (name, field, type="text") => {
     let formattedName = capitalize(name)
     formattedName = separate(formattedName)
 
     return (
       <TextInput
+        type={type}
         name={name}
         label={formattedName}
         value={field}
@@ -111,7 +112,7 @@ export const CustomerForm = ({ customer, formTitle, onComplete }) => {
       {makeInput("email", email)}
       {makeInput("referredBy", referredBy)}
       {makeInput("adSource", adSource)}
-      {makeInput("useMeAsReference", useMeAsReference)}
+      {makeInput("useMeAsReference", useMeAsReference, "checkbox")}
       <ButtonContainer>
         <Button onClick={() => onComplete(customerData)}>Submit</Button>
       </ButtonContainer>

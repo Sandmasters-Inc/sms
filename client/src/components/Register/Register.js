@@ -1,6 +1,24 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
+import styled from 'styled-components'
+import { TextInput } from '../Inputs'
+import { Button } from '../Button'
+import { capitalize, separate } from '../../utils/StringUtils'
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  max-width: 500px;
+  margin: 0 auto;
+`
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+  width: 500px;
+`
 
 const Register = ({ authenticateUser }) => {
   let history = useHistory();
@@ -66,79 +84,41 @@ const Register = ({ authenticateUser }) => {
     }
   };
 
+  const makeInput = (name, field, type = 'text') => {
+    let formattedName = capitalize(name)
+    formattedName = separate(formattedName)
+
+    return (
+      <TextInput
+        type={type}
+        name={name}
+        label={formattedName}
+        value={field}
+        onChange={e => onChange(e)}
+      />
+    )
+  }
+
   return (
-    <div>
-      <h2>Register</h2>
-      <div>
-        <input
-          type="text"
-          placeholder="First Name"
-          name="firstName"
-          value={firstName}
-          onChange={e => onChange(e)}
-        />
-      </div>
-      <div>
-        <input
-          type="text"
-          placeholder="Last Name"
-          name="lastName"
-          value={lastName}
-          onChange={e => onChange(e)}
-        />
-      </div>
-      <div>
-        <label for="active">Active</label>
-        <input
-          type="checkbox"
-          name="active"
-          value={active}
-          onChange={e => onChange(e)}
-        />
-      </div>
-      <div>
-        <input
-          type="date"
-          name="hireDate"
-          value={hireDate}
-          onChange={e => onChange(e)}
-        />
-      </div>
-      <div>
-        <input
-          type="text"
-          placeholder="Email"
-          name="email"
-          value={email}
-          onChange={e => onChange(e)}
-        />
-      </div>
-      <div>
-        <input
-          type="text"
-          placeholder="Password"
-          name="password"
-          value={password}
-          onChange={e => onChange(e)}
-        />
-      </div>
-      <div>
-        <input
-          type="text"
-          placeholder="Confirm Password"
-          name="passwordConfirm"
-          value={passwordConfirm}
-          onChange={e => onChange(e)}
-        />
-      </div>
-      <div>
-        <button onClick={() => registerUser()}>Register</button>
-      </div>
-      <div>
-        {errors && errors.map(error => <div key={error.msg}>{error.msg}</div>)}
-      </div>
-    </div>
-  );
+    <Container>
+      <h1>Register</h1>
+      {makeInput("firstName", firstName)}
+      {makeInput("lastName", lastName)}
+      {makeInput("active", active, "checkbox")}
+      {makeInput("hireDate", hireDate, "date")}
+      {makeInput("email", email)}
+      {makeInput("password", password)}
+      {makeInput("passwordConfirm", passwordConfirm)}
+      <ButtonContainer>
+        <div>
+          <Button onClick={() => registerUser()}>Register</Button>
+        </div>
+        <div>
+          {errors && errors.map(error => <div key={error.msg}>{error.msg}</div>)}
+        </div>
+      </ButtonContainer>
+    </Container>
+  )
 };
 
 export default Register;

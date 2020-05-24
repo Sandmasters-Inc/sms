@@ -98,12 +98,13 @@ export const JobForm = ({ job, formTitle, onComplete }) => {
     });
   };
 
-  const makeInput = (name, field) => {
+  const makeInput = (name, field, type = 'text') => {
     let formattedName = capitalize(name)
     formattedName = separate(formattedName)
 
     return (
       <TextInput
+        type={type}
         name={name}
         label={formattedName}
         value={field}
@@ -128,13 +129,13 @@ export const JobForm = ({ job, formTitle, onComplete }) => {
       {makeInput("notes", notes)}
       {makeInput("inspector", inspector)}
       {makeInput("payTerms", payTerms)}
-      {makeInput("inquiryDate", inquiryDate)}
-      {makeInput("inspectionDate", inspectionDate)}
-      {makeInput("followUpDate", followUpDate)}
-      {makeInput("tentativeDate", tentativeDate)}
-      {makeInput("scheduledDate", scheduledDate)}
-      {makeInput("completedDate", completedDate)}
-      {makeInput("active", active)}
+      {makeInput("inquiryDate", inquiryDate, "date")}
+      {makeInput("inspectionDate", inspectionDate, "date")}
+      {makeInput("followUpDate", followUpDate, "date")}
+      {makeInput("tentativeDate", tentativeDate, "date")}
+      {makeInput("scheduledDate", scheduledDate, "date")}
+      {makeInput("completedDate", completedDate, "date")}
+      {makeInput("active", active, "checkbox")}
       <ButtonContainer>
         <Button onClick={() => onComplete(jobData)}>Submit</Button>
       </ButtonContainer>
