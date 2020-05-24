@@ -1,6 +1,6 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
-import { slugify } from 'slugify'
+import slugify from 'slugify';
 import styled from 'styled-components'
 import { Button } from '../Button'
 
@@ -15,8 +15,15 @@ const Controls = styled.div`
   }
 `
 
-export const CustomerListItem = ({ customer, deleteCustomer, editCustomer }) => {
+export const CustomerListItem = ({ customer, clickCustomer, deleteCustomer, editCustomer }) => {
   const history = useHistory()
+
+  const handleClickCustomer = customer => {
+    const slug = slugify(customer.name, { lower: true });
+
+    clickCustomer(customer);
+    history.push(`/customers/${slug}`);
+  }
 
   const handleEditCustomer = customer => {
     editCustomer(customer)
@@ -25,7 +32,9 @@ export const CustomerListItem = ({ customer, deleteCustomer, editCustomer }) => 
 
   return (
     <Container>
-      Customer: {customer.name}
+      <div onClick={() => handleClickCustomer(customer)}>
+        Customer: {customer.name}
+      </div>
       <Controls>
         <Button onClick={() => handleEditCustomer(customer)}>Edit</Button>
         <Button onClick={() => deleteCustomer(customer)}>Delete</Button>

@@ -9,7 +9,7 @@ import Job from './components/Job/Job';
 import CreateJob from './components/Job/CreateJob';
 import EditJob from './components/Job/EditJob';
 import { CustomerList } from './components/CustomerList'
-import { CreateCustomer, EditCustomer } from './components/Customer';
+import { CreateCustomer, EditCustomer, ViewCustomer } from './components/Customer';
 
 class App extends React.Component {
   state = {
@@ -284,6 +284,7 @@ class App extends React.Component {
                     <h2>Customers</h2>
                     <CustomerList
                       customers={customers}
+                      clickCustomer={this.viewCustomer}
                       deleteCustomer={this.deleteCustomer}
                       editCustomer={this.editCustomer}
                     />
@@ -304,6 +305,9 @@ class App extends React.Component {
                   job={job}
                   onJobUpdated={this.onJobUpdated}
                 />
+              </Route>
+              <Route path="/customers/:customerId">
+                <ViewCustomer customer={customer} />
               </Route>
               <Route path="/new-customer">
                 <CreateCustomer token={token} onCustomerCreated={this.onCustomerCreated} />
