@@ -1,5 +1,5 @@
 import React from 'react';
-import JobListItem from './JobListItem';
+import { JobListItem } from './JobListItem';
 
 const JobList = props => {
   const { jobs, clickJob, deleteJob, editJob } = props;
