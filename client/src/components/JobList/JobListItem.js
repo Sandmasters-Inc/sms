@@ -1,9 +1,21 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import slugify from 'slugify';
-import './styles.css';
+import styled from 'styled-components'
+import { Button } from '../Button'
 
-const JobListItem = props => {
+const Container = styled.div`
+  padding: 5px 20px;
+`
+
+const Controls = styled.div`
+  margin: 10px 0 10px 0;
+  & button {
+    margin-left: 20px;
+  }
+`
+
+export const JobListItem = props => {
   const { job, clickJob, deleteJob, editJob } = props;
   const history = useHistory();
 
@@ -20,16 +32,14 @@ const JobListItem = props => {
   };
 
   return (
-    <div>
-      <div className="jobListItem" onClick={() => handleClickJob(job)}>
+    <Container >
+      <div onClick={() => handleClickJob(job)}>
         Job: {job.name}
       </div>
-      <div className="jobControls">
-        <button onClick={() => deleteJob(job)}>Delete</button>
-        <button onClick={() => handleEditJob(job)}>Edit</button>
-      </div>
-    </div>
-  );
-};
-
-export default JobListItem;
+      <Controls>
+        <Button onClick={() => handleEditJob(job)}>Edit</Button>
+        <Button onClick={() => deleteJob(job)}>Delete</Button>
+      </Controls>
+    </Container>
+  )
+}

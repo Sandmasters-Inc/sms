@@ -9,11 +9,12 @@ import Job from './components/Job/Job';
 import CreateJob from './components/Job/CreateJob';
 import EditJob from './components/Job/EditJob';
 import { CustomerList } from './components/CustomerList'
-import { CreateCustomer } from './components/Customer';
+import { CreateCustomer, EditCustomer, ViewCustomer } from './components/Customer';
 
 class App extends React.Component {
   state = {
     customers: [],
+    customer: null,
     jobs: [],
     job: null,
     token: null,
@@ -115,8 +116,11 @@ class App extends React.Component {
     this.setState({ user: null, token: null });
   };
 
+  /**
+   * Job Functions
+   */
   viewJob = job => {
-    console.log(`view ${job.name}`);
+    console.log(`view job: ${job.name}`);
     this.setState({
       job: job
     });
@@ -172,6 +176,46 @@ class App extends React.Component {
     });
   };
 
+  /**
+   * Customer Functions
+   */
+  viewCustomer = customer => {
+    console.log(`view customer: ${customer.name}`);
+    this.setState({
+      customer: customer
+    });
+  }
+
+  deleteCustomer = customer => {
+    const { token } = this.state
+
+    if (token) {
+      const config = {
+        headers: {
+          'x-auth-token': token
+        }
+      }
+
+      axios
+        .delete(`/api/customers/${customer._id}`, config)
+        .then(response => {
+          const newCustomers = this.state.customers.filter(c => c._id !== customer._id)
+          this.setState({
+            customers: [...newCustomers]
+          })
+        })
+        .catch(error => {
+          console.error(`Error delete customer: ${customer}`)
+        })
+    }
+  }
+
+  editCustomer = customer => {
+    this.setState({
+      customer: customer
+    })
+  }
+
   onCustomerCreated = customer => {
     const newCustomers = [...this.state.customers, customer]
 
@@ -180,8 +224,20 @@ class App extends React.Component {
     })
   }
 
+  onCustomerUpdated = customer => {
+    console.log('updated customer: ', customer)
+    const newCustomers = [...this.state.customers]
+    const index = newCustomers.findIndex(c => c._id === customer._id)
+
+    newCustomers[index] = customer
+
+    this.setState({
+      customers: newCustomers
+    })
+  }
+
   render() {
-    let { user, jobs, job, customers, token } = this.state;
+    let { user, jobs, job, customers, customer, token } = this.state;
     const authProps = {
       authenticateUser: this.authenticateUser
     };
@@ -228,6 +284,9 @@ class App extends React.Component {
                     <h2>Customers</h2>
                     <CustomerList
                       customers={customers}
+                      clickCustomer={this.viewCustomer}
+                      deleteCustomer={this.deleteCustomer}
+                      editCustomer={this.editCustomer}
                     />
                   </>
                 ) : (
@@ -247,9 +306,18 @@ class App extends React.Component {
                   onJobUpdated={this.onJobUpdated}
                 />
               </Route>
+              <Route path="/customers/:customerId">
+                <ViewCustomer customer={customer} />
+              </Route>
               <Route path="/new-customer">
-                {/* <CreateCustomerTest /> */}
                 <CreateCustomer token={token} onCustomerCreated={this.onCustomerCreated} />
+              </Route>
+              <Route path="/edit-customer/:customerId">
+                  <EditCustomer 
+                    token={token}
+                    customer={customer}
+                    onCustomerUpdated={this.onCustomerUpdated}
+                  />
               </Route>
               <Route
                 exact
