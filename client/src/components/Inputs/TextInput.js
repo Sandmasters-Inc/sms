@@ -10,6 +10,7 @@ import { Text } from '../Text'
 
 const StyledInput = styled.input`
   padding: 10px;
+  width: 100%;
 `
 
 const ErrorContainer = styled.div`
