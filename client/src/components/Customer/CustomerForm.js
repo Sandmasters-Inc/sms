@@ -1,22 +1,9 @@
 import React, { useState } from 'react'
 import { Button } from '../Button'
 import { TextInput } from '../Inputs'
+import { PageContent, PageControls } from '../Page'
 import { capitalize, separate } from '../../utils/StringUtils'
 import styled from 'styled-components'
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  max-width: 500px;
-  margin: 0 auto;
-`
-
-const ButtonContainer = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 20px;
-  width: 500px;
-`
 
 export const CustomerForm = ({ customer, formTitle, onComplete }) => {
   const [customerData, setCustomerData] = useState(() => {
@@ -97,7 +84,7 @@ export const CustomerForm = ({ customer, formTitle, onComplete }) => {
   }
 
   return (
-    <Container>
+    <PageContent>
       <h1>{formTitle}</h1>
       {makeInput("name", name)}
       {makeInput("firstName", firstName)}
@@ -113,9 +100,9 @@ export const CustomerForm = ({ customer, formTitle, onComplete }) => {
       {makeInput("referredBy", referredBy)}
       {makeInput("adSource", adSource)}
       {makeInput("useMeAsReference", useMeAsReference, "checkbox")}
-      <ButtonContainer>
+      <PageControls>
         <Button onClick={() => onComplete(customerData)}>Submit</Button>
-      </ButtonContainer>
-    </Container>
+      </PageControls>
+    </PageContent>
   )
 }

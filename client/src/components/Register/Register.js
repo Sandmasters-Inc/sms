@@ -4,21 +4,8 @@ import { useHistory } from 'react-router-dom';
 import styled from 'styled-components'
 import { TextInput } from '../Inputs'
 import { Button } from '../Button'
+import { PageContent, PageControls } from '../Page'
 import { capitalize, separate } from '../../utils/StringUtils'
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  max-width: 500px;
-  margin: 0 auto;
-`
-
-const ButtonContainer = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 20px;
-  width: 500px;
-`
 
 const Register = ({ authenticateUser }) => {
   let history = useHistory();
@@ -100,7 +87,7 @@ const Register = ({ authenticateUser }) => {
   }
 
   return (
-    <Container>
+    <PageContent>
       <h1>Register</h1>
       {makeInput("firstName", firstName)}
       {makeInput("lastName", lastName)}
@@ -109,15 +96,15 @@ const Register = ({ authenticateUser }) => {
       {makeInput("email", email)}
       {makeInput("password", password)}
       {makeInput("passwordConfirm", passwordConfirm)}
-      <ButtonContainer>
+      <PageControls>
         <div>
           <Button onClick={() => registerUser()}>Register</Button>
         </div>
         <div>
           {errors && errors.map(error => <div key={error.msg}>{error.msg}</div>)}
         </div>
-      </ButtonContainer>
-    </Container>
+      </PageControls>
+    </PageContent>
   )
 };
 
