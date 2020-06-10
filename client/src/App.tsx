@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { ThemeProvider } from 'styled-components'
 import './App.css';
 import Register from './components/Register/Register';
 import Login from './components/Login/Login';
@@ -244,7 +245,8 @@ class App extends React.Component {
 
     return (
       <Router>
-        <div className="App">
+        <ThemeProvider theme={{ mode: 'light' }}>
+          <div className="App">
           <header className="App-header">
             <h1>Sandmasters</h1>
             <ul>
@@ -332,6 +334,7 @@ class App extends React.Component {
             </Switch>
           </main>
         </div>
+        </ThemeProvider>
       </Router>
     );
   }
