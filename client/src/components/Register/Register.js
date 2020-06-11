@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
-import styled from 'styled-components'
-import { TextInput } from '../Inputs'
+import { InputType, InputFactory } from '../Inputs'
 import { Button } from '../Button'
 import { PageContent, PageControls } from '../Page'
-import { capitalize, separate } from '../../utils/StringUtils'
 
 const Register = ({ authenticateUser }) => {
   let history = useHistory();
@@ -71,31 +69,23 @@ const Register = ({ authenticateUser }) => {
     }
   };
 
-  const makeInput = (name, field, type = 'text') => {
-    let formattedName = capitalize(name)
-    formattedName = separate(formattedName)
-
-    return (
-      <TextInput
-        type={type}
-        name={name}
-        label={formattedName}
-        value={field}
-        onChange={e => onChange(e)}
-      />
-    )
-  }
+  const config = [
+    { name: 'firstName', value: firstName },
+    { name: 'lastName', value: lastName },
+    { name: 'hireDate', value: hireDate, type: 'date' },
+    { name: 'email', value: email },
+    { name: 'password', value: password, type: 'password' },
+    { name: 'passwordConfirm', value: passwordConfirm, type: 'password' },
+    { name: 'active', value: active, inputType: InputType.checkbox }
+  ]
 
   return (
     <PageContent>
       <h1>Register</h1>
-      {makeInput("firstName", firstName)}
-      {makeInput("lastName", lastName)}
-      {makeInput("active", active, "checkbox")}
-      {makeInput("hireDate", hireDate, "date")}
-      {makeInput("email", email)}
-      {makeInput("password", password)}
-      {makeInput("passwordConfirm", passwordConfirm)}
+ 
+      {config.map((props, i) =>
+        <InputFactory key={i} {...props} onChange={e => onChange(e)} />)
+      }
       <PageControls>
         <div>
           <Button onClick={() => registerUser()}>Register</Button>

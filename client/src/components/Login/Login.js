@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
-import styled from 'styled-components'
 import { TextInput } from '../Inputs'
 import { Button } from '../Button'
 import { PageContent, PageControls } from '../Page'
-import { capitalize, separate } from '../../utils/StringUtils'
 
 const Login = ({ authenticateUser }) => {
   let history = useHistory();
@@ -58,25 +56,11 @@ const Login = ({ authenticateUser }) => {
     authenticateUser();
   };
 
-  const makeInput = (name, field) => {
-    let formattedName = capitalize(name)
-    formattedName = separate(formattedName)
-
-    return (
-      <TextInput
-        name={name}
-        label={formattedName}
-        value={field}
-        onChange={e => onChange(e)}
-      />
-    )
-  }
-
   return (
     <PageContent>
       <h1>Log In</h1>
-      {makeInput("email", email)}
-      {makeInput("password", password)}
+      <TextInput name="email" value={email} onChange={e => onChange(e)} />
+      <TextInput name="password" value={password} onChange={e => onChange(e)} />
       <PageControls>
         <div>
           <Button onClick={() => loginUser()}>Log In</Button>

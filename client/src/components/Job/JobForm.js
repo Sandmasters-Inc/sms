@@ -1,9 +1,7 @@
 import React, { useState } from 'react'
 import { Button } from '../Button'
-import { TextInput } from '../Inputs'
+import { InputType, InputFactory } from '../Inputs'
 import { PageContent, PageControls } from '../Page'
-import { capitalize, separate } from '../../utils/StringUtils'
-import styled from 'styled-components'
 
 export const JobForm = ({ job, formTitle, onComplete }) => {
   const [jobData, setJobData] = useState(() => {
@@ -82,47 +80,39 @@ export const JobForm = ({ job, formTitle, onComplete }) => {
     setJobData({
       ...jobData,
       [name]: value
-    });
-  };
-
-  const makeInput = (name, field, type = 'text') => {
-    let formattedName = capitalize(name)
-    formattedName = separate(formattedName)
-
-    return (
-      <TextInput
-        type={type}
-        name={name}
-        label={formattedName}
-        value={field}
-        onChange={e => onChange(e)}
-      />
-    )
+    })
   }
+
+  const config = [
+    { name: 'name', value: name },
+    { name: 'street', value: street },
+    { name: 'city', value: city },
+    { name: 'state', value: state },
+    { name: 'zip', value: zip },
+    <h2>Job Details</h2>,
+    { name: 'approvedUser', value: approvedUser },
+    { name: 'status', value: status },
+    { name: 'primaryType', value: primaryType },
+    { name: 'notes', value: notes },
+    { name: 'inspector', value: inspector },
+    { name: 'payTerms', value: payTerms },
+    { name: 'inquiryDate', value: inquiryDate, type:'date' },
+    { name: 'inspectionDate', value: inspectionDate, type:'date' },
+    { name: 'followUpDate', value: followUpDate, type:'date' },
+    { name: 'tentativeDate', value: tentativeDate, type:'date' },
+    { name: 'scheduledDate', value: scheduledDate, type:'date' },
+    { name: 'completedDate', value: completedDate, type:'date' },
+    { name: 'active', value: active, inputType: InputType.checkbox }
+  ]
 
   return (
     <PageContent>
       <h1>{formTitle}</h1>
       <h2>Job Address</h2>
-      {makeInput("name", name)}
-      {makeInput("street", street)}
-      {makeInput("city", city)}
-      {makeInput("state", state)}
-      {makeInput("zip", zip)}
-      <h2>Job Details</h2>
-      {makeInput("approvedUser", approvedUser)}
-      {makeInput("status", status)}
-      {makeInput("primaryType", primaryType)}
-      {makeInput("notes", notes)}
-      {makeInput("inspector", inspector)}
-      {makeInput("payTerms", payTerms)}
-      {makeInput("inquiryDate", inquiryDate, "date")}
-      {makeInput("inspectionDate", inspectionDate, "date")}
-      {makeInput("followUpDate", followUpDate, "date")}
-      {makeInput("tentativeDate", tentativeDate, "date")}
-      {makeInput("scheduledDate", scheduledDate, "date")}
-      {makeInput("completedDate", completedDate, "date")}
-      {makeInput("active", active, "checkbox")}
+      {config.map((props, i) => props.hasOwnProperty('name')
+        ? <InputFactory key={i} {...props} onChange={e => onChange(e)} />
+        : props)
+      }
       <PageControls>
         <Button onClick={() => onComplete(jobData)}>Submit</Button>
       </PageControls>
