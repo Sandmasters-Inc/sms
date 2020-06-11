@@ -1,9 +1,7 @@
 import React, { useState } from 'react'
 import { Button } from '../Button'
-import { TextInput } from '../Inputs'
+import { TextInput, Checkbox } from '../Inputs'
 import { PageContent, PageControls } from '../Page'
-import { capitalize, separate } from '../../utils/StringUtils'
-import styled from 'styled-components'
 
 export const CustomerForm = ({ customer, formTitle, onComplete }) => {
   const [customerData, setCustomerData] = useState(() => {
@@ -68,38 +66,24 @@ export const CustomerForm = ({ customer, formTitle, onComplete }) => {
     })
   }
 
-  const makeInput = (name, field, type="text") => {
-    let formattedName = capitalize(name)
-    formattedName = separate(formattedName)
-
-    return (
-      <TextInput
-        type={type}
-        name={name}
-        label={formattedName}
-        value={field}
-        onChange={e => onChange(e)}
-      />
-    )
-  }
-
   return (
     <PageContent>
       <h1>{formTitle}</h1>
-      {makeInput("name", name)}
-      {makeInput("firstName", firstName)}
-      {makeInput("lastName", lastName)}
-      {makeInput("company", company)}
-      {makeInput("address", address)}
-      {makeInput("city", city)}
-      {makeInput("state", state)}
-      {makeInput("zip", zip)}
-      {makeInput("businessType", businessType)}
-      {makeInput("phoneNumbers", phoneNumbers)}
-      {makeInput("email", email)}
-      {makeInput("referredBy", referredBy)}
-      {makeInput("adSource", adSource)}
-      {makeInput("useMeAsReference", useMeAsReference, "checkbox")}
+      <TextInput name="name" value={name} onChange={e => onChange(e)} />
+      <TextInput name="firstName" value={firstName} onChange={e => onChange(e)} />
+      <TextInput name="lastName" value={lastName} onChange={e => onChange(e)} />
+      <TextInput name="company" value={company} onChange={e => onChange(e)} />
+      <TextInput name="address" value={address} onChange={e => onChange(e)} />
+      <TextInput name="city" value={city} onChange={e => onChange(e)} />
+      <TextInput name="state" value={state} onChange={e => onChange(e)} />
+      <TextInput name="zip" value={zip} onChange={e => onChange(e)} />
+      <TextInput name="businessType" value={businessType} onChange={e => onChange(e)} />
+      <TextInput name="phoneNumbers" value={phoneNumbers} onChange={e => onChange(e)} />
+      <TextInput name="email" value={email} onChange={e => onChange(e)} />
+      <TextInput name="referredBy" value={referredBy} onChange={e => onChange(e)} />
+      <TextInput name="adSource" value={adSource} onChange={e => onChange(e)} />
+      <Checkbox name="useMeAsReference" value={useMeAsReference} onChange={e => onChange(e)} />
+  
       <PageControls>
         <Button onClick={() => onComplete(customerData)}>Submit</Button>
       </PageControls>
