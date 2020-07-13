@@ -11,6 +11,7 @@ import CreateJob from './components/Job/CreateJob';
 import EditJob from './components/Job/EditJob';
 import { CustomerList } from './components/CustomerList'
 import { CreateCustomer, EditCustomer, ViewCustomer } from './components/Customer';
+import Menu from './components/Menu/Menu'
 
 class App extends React.Component {
   state = {
@@ -269,31 +270,36 @@ class App extends React.Component {
               )}
             </ul>
           </header>
+
+          {user && <Menu user={user} />}
           <main>
             <Switch>
               <Route exact path="/">
                 {user ? (
                   <>
                     <div>Hello {user}!</div>
-                    <h2>Jobs</h2>
-                    <JobList
-                      jobs={jobs}
-                      clickJob={this.viewJob}
-                      deleteJob={this.deleteJob}
-                      editJob={this.editJob}
-                    />
-
-                    <h2>Customers</h2>
-                    <CustomerList
-                      customers={customers}
-                      clickCustomer={this.viewCustomer}
-                      deleteCustomer={this.deleteCustomer}
-                      editCustomer={this.editCustomer}
-                    />
                   </>
                 ) : (
                   <>Please Register or Login</>
                 )}
+              </Route>
+              <Route path="/customers">
+                <h2>Customers</h2>
+                <CustomerList
+                  customers={customers}
+                  clickCustomer={this.viewCustomer}
+                  deleteCustomer={this.deleteCustomer}
+                  editCustomer={this.editCustomer}
+                />
+              </Route>
+              <Route path="/jobs">
+                <h2>Jobs</h2>
+                <JobList
+                  jobs={jobs}
+                  clickJob={this.viewJob}
+                  deleteJob={this.deleteJob}
+                  editJob={this.editJob}
+                />
               </Route>
               <Route path="/jobs/:jobId">
                 <Job job={job} />
