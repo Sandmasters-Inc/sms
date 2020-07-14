@@ -12,6 +12,7 @@ import EditJob from './components/Job/EditJob';
 import { CustomerList } from './components/CustomerList'
 import { CreateCustomer, EditCustomer, ViewCustomer } from './components/Customer';
 import Menu from './components/Menu/Menu'
+import { ProductionCalendar } from './components/Calendar'
 
 class App extends React.Component {
   state = {
@@ -300,6 +301,9 @@ class App extends React.Component {
                   deleteJob={this.deleteJob}
                   editJob={this.editJob}
                 />
+              </Route>
+              <Route path="/calendars">
+                  <ProductionCalendar />
               </Route>
               <Route path="/jobs/:jobId">
                 <Job job={job} />
