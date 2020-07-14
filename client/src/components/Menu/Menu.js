@@ -12,6 +12,11 @@ const Nav = styled.nav`
       display: inline;
       text-align: center;
       padding: 10px;
+
+      & a {
+        color: #555;
+        text-decoration: none;
+      }
     }
   }
 `
