@@ -12,7 +12,9 @@ import EditJob from './components/Job/EditJob';
 import { CustomerList } from './components/CustomerList'
 import { CreateCustomer, EditCustomer, ViewCustomer } from './components/Customer';
 import Menu from './components/Menu/Menu'
+import { Admin } from './components/Dashboard'
 import { ProductionCalendar } from './components/Calendar'
+import { Button } from './components/Button'
 
 class App extends React.Component {
   state = {
@@ -251,18 +253,9 @@ class App extends React.Component {
           <div className="App">
           <header className="App-header">
             <h1>Sandmasters</h1>
-            <ul>
-              <li>
-                <Link to="/">Home</Link>
-              </li>         
-              {user && (
-                <>
-                <li><Link to="/new-customer">New Customer</Link></li>
-                <li><Link to="/new-job">New Job</Link></li>
-                </>
-              )}      
+            <ul>          
               {user ? (
-                <li><Link to="" onClick={this.logOut}>Log out</Link></li>
+                <li><Link to="" onClick={this.logOut}>Log out {user}</Link></li>
               ) : (
                 <>
                 <li><Link to="/register">Register</Link></li>
@@ -278,7 +271,8 @@ class App extends React.Component {
               <Route exact path="/">
                 {user ? (
                   <>
-                    <div>Hello {user}!</div>
+                    <h2>Admin Dashboard | {user}</h2>
+                    <Admin />
                   </>
                 ) : (
                   <>Please Register or Login</>
@@ -286,6 +280,9 @@ class App extends React.Component {
               </Route>
               <Route path="/customers">
                 <h2>Customers</h2>
+                <Link to="/new-customer">
+                  <Button>New Customer</Button>
+                </Link>
                 <CustomerList
                   customers={customers}
                   clickCustomer={this.viewCustomer}
@@ -295,16 +292,15 @@ class App extends React.Component {
               </Route>
               <Route path="/jobs">
                 <h2>Jobs</h2>
+                <Link to="/new-job">
+                  <Button>New Job</Button>
+                </Link>
                 <JobList
                   jobs={jobs}
                   clickJob={this.viewJob}
                   deleteJob={this.deleteJob}
                   editJob={this.editJob}
                 />
-              </Route>
-              <Route path="/calendars">
-                  <h2>Production Calendar</h2>
-                  <ProductionCalendar />
               </Route>
               <Route path="/jobs/:jobId">
                 <Job job={job} />

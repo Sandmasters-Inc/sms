@@ -45,7 +45,7 @@ const CreateJob = ({ token, onJobCreated }) => {
 
         // Call the handler and redirect
         onJobCreated(res.data);
-        history.push('/');
+        history.push('/jobs');
       } catch (error) {
         console.error(`Error creating job: ${error.response.data}`);
       }

@@ -41,7 +41,7 @@ export const CreateCustomer = ({ token, onCustomerCreated}) => {
 
         // Call the handler and redirect
         onCustomerCreated(res.data)
-        history.push('/')
+        history.push('/customers')
       } catch (error) {
         console.error(`Error creating customer: ${error.response.data}`)
       }

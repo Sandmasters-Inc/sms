@@ -25,9 +25,9 @@ const Menu = ( { user } ) => {
   return (
     <Nav>
       <ul>
+        <li><Link to="/">Home</Link></li>
         <li><Link to="/customers">Customers</Link></li>
         <li><Link to="/jobs">Jobs</Link></li>
-        <li><Link to="/calendars">Calendars</Link></li>
       </ul>
     </Nav>
   )
