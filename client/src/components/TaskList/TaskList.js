@@ -21,16 +21,16 @@ export const TaskList = props => {
 
   return (
     <Flex flexDirection="column">
-    <Text as='h3'>Top Tasks</Text>
-    <List>
-    {
-      tasks.map((task, i) => (
-        <Wrapper key={i} as="li">
-          <Text>{task}</Text>
-        </Wrapper>
-      ))
-    }
-    </List>
+      <Text as='h3'>Top Tasks</Text>
+      <List>
+      {
+        tasks.map((task, i) => (
+          <Wrapper key={i} as="li">
+            <Text>{task}</Text>
+          </Wrapper>
+        ))
+      }
+      </List>
     </Flex>
   )
 }
