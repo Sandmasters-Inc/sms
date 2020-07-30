@@ -13,7 +13,6 @@ import { CustomerList } from './components/CustomerList'
 import { CreateCustomer, EditCustomer, ViewCustomer } from './components/Customer';
 import Menu from './components/Menu/Menu'
 import { Admin, Sales } from './components/Dashboard'
-import { ProductionCalendar } from './components/Calendar'
 import { Button } from './components/Button'
 
 class App extends React.Component {
