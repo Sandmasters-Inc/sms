@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import moment from 'moment'
 import { Button } from '../Button'
 import { InputType, InputFactory } from '../Inputs'
 import { PageContent, PageControls } from '../Page'
@@ -16,11 +17,12 @@ export const JobForm = ({ job, formTitle, onComplete }) => {
       approvedUser: job.approvedUser,
       createdUser: job.createdUser,
       createdDate: job.createdDate,
-      inquiryDate: job.inquiryDate,
-      inspectionDate: job.inspectionDate,
-      followUpDate: job.followUpDate,
-      tentativeDate: job.tentativeDate,
-      completedDate: job.completedDate,
+      inquiryDate: moment(job.inquiryDate).format('YYYY-MM-DD'),
+      inspectionDate: moment(job.inspectionDate).format('YYYY-MM-DD'),
+      followUpDate: moment(job.followUpDate).format('YYYY-MM-DD'),
+      tentativeDate: moment(job.tentativeDate).format('YYYY-MM-DD'),
+      scheduledDate: moment(job.scheduledDate).format('YYYY-MM-DD'),
+      completedDate: moment(job.completedDate).format('YYYY-MM-DD'),
       status: job.status,
       primaryType: job.primaryType,
       notes: job.notes,
@@ -96,12 +98,12 @@ export const JobForm = ({ job, formTitle, onComplete }) => {
     { name: 'notes', value: notes },
     { name: 'inspector', value: inspector },
     { name: 'payTerms', value: payTerms },
-    { name: 'inquiryDate', value: inquiryDate, type:'date' },
-    { name: 'inspectionDate', value: inspectionDate, type:'date' },
-    { name: 'followUpDate', value: followUpDate, type:'date' },
-    { name: 'tentativeDate', value: tentativeDate, type:'date' },
-    { name: 'scheduledDate', value: scheduledDate, type:'date' },
-    { name: 'completedDate', value: completedDate, type:'date' },
+    { name: 'inquiryDate', value: inquiryDate, type:'date', placeholder: 'yyyy-mm-dd' },
+    { name: 'inspectionDate', value: inspectionDate, type:'date', placeholder: 'yyyy-mm-dd' },
+    { name: 'followUpDate', value: followUpDate, type:'date', placeholder: 'yyyy-mm-dd' },
+    { name: 'tentativeDate', value: tentativeDate, type:'date', placeholder: 'yyyy-mm-dd' },
+    { name: 'scheduledDate', value: scheduledDate, type:'date', placeholder: 'yyyy-mm-dd' },
+    { name: 'completedDate', value: completedDate, type:'date', placeholder: 'yyyy-mm-dd' },
     { name: 'active', value: active, inputType: InputType.checkbox }
   ]
 
