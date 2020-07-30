@@ -8,9 +8,10 @@ import styled from 'styled-components'
 // `
 const StyledButton = styled(ButtonBase)`
   padding: 16px;
-  border: solid 1px gray;
+  border: solid 1px #2C3E50;
   border-radius: 3px;
-  background-color: #696969;
+  color: #fff;
+  background-color: #2C3E50;
 `
 
 export const Button = props => <StyledButton {...props} />
