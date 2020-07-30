@@ -288,7 +288,7 @@ class App extends React.Component {
             </ul>
           </header>
 
-          {user && <Menu user={user} />}
+          {user && <Menu role={role} />}
           <main>
             <Switch>
               <Route exact path="/">

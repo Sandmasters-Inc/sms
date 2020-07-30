@@ -21,13 +21,28 @@ const Nav = styled.nav`
   }
 `
 
-const Menu = ( { user } ) => {
+const linkData = {
+  admin: [
+    { route: '/', text: 'Home' },
+    { route: '/customers', text: 'Customers' },
+    { route: '/jobs', text: 'Jobs' }
+  ],
+  sales: [
+    { route: '/', text: 'Home' },
+    { route: '/', text: 'Sales' },
+  ]
+}
+
+const renderLinks = role => {
+  const links = linkData[role];
+  return links.map(link => <li><Link to={link.route}>{link.text}</Link></li>)
+}
+
+const Menu = ( { role } ) => {
   return (
     <Nav>
       <ul>
-        <li><Link to="/">Home</Link></li>
-        <li><Link to="/customers">Customers</Link></li>
-        <li><Link to="/jobs">Jobs</Link></li>
+        {renderLinks(role)}
       </ul>
     </Nav>
   )
