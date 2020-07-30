@@ -12,7 +12,7 @@ import EditJob from './components/Job/EditJob';
 import { CustomerList } from './components/CustomerList'
 import { CreateCustomer, EditCustomer, ViewCustomer } from './components/Customer';
 import Menu from './components/Menu/Menu'
-import { Admin } from './components/Dashboard'
+import { Admin, Sales } from './components/Dashboard'
 import { ProductionCalendar } from './components/Calendar'
 import { Button } from './components/Button'
 
@@ -23,7 +23,8 @@ class App extends React.Component {
     jobs: [],
     job: null,
     token: null,
-    user: null
+    user: null,
+    role: null
   };
 
   componentDidMount() {
@@ -51,6 +52,7 @@ class App extends React.Component {
           this.setState(
             {
               user: response.data.firstName,
+              role: response.data.role,
               token: token
             },
             () => {
@@ -241,8 +243,30 @@ class App extends React.Component {
     })
   }
 
+  renderDashboard = (user, role) => {
+    switch (role) {
+      case 'admin':
+        return (
+          <>
+            <h2>Admin Dashboard | {user}</h2>
+            <Admin />
+          </>
+        )
+      case 'sales':
+        return (
+          <>
+            <h2>Sales Dashboard | {user}</h2>
+            <Sales />
+          </>
+        )
+    
+      default:
+        return <></>
+    }
+  }
+
   render() {
-    let { user, jobs, job, customers, customer, token } = this.state;
+    let { user, role, jobs, job, customers, customer, token } = this.state;
     const authProps = {
       authenticateUser: this.authenticateUser
     };
@@ -270,10 +294,7 @@ class App extends React.Component {
             <Switch>
               <Route exact path="/">
                 {user ? (
-                  <>
-                    <h2>Admin Dashboard | {user}</h2>
-                    <Admin />
-                  </>
+                  this.renderDashboard(user, role)
                 ) : (
                   <>Please Register or Login</>
                 )}

@@ -1,21 +1,24 @@
 import React from 'react'
 import { Flex, Box } from 'rebass/styled-components'
-import { ProductionCalendar } from '../Calendar'
-import { Financials } from '../Financials'
-import { TaskList } from '../TaskList'
 
-export const Admin = () => (
+export const Sales = () => (
   <Flex>
     <Box width={[1, 1, 3/4]}>
-      <ProductionCalendar />
+      Site Inspection Calendar
     </Box>
     <Box width={[1, 1, 1/4]} p={3}>
       <Flex flexDirection="column">
         <Box>
-          <Financials />
+          Job Proposals
         </Box>
         <Box>
-          <TaskList />
+          Jobs In Progress
+        </Box>
+        <Box>
+          Completed Jobs
+        </Box>
+        <Box>
+          Site Inspection Follow Up
         </Box>
       </Flex>
     </Box>
