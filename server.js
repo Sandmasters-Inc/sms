@@ -8,6 +8,7 @@ import config from 'config';
 import User from './models/User';
 import Job from './models/Job';
 import Customer from './models/Customer';
+import Task from './models/Task';
 import auth from './middleware/auth';
 import path from 'path';
 
@@ -554,6 +555,162 @@ app.put('/api/customers/:id', auth, async(req, res) => {
     res.status(500).send('Server error')
   }
 })
+
+// Task endpoints
+/**
+ * @route POST api/tasks
+ * @desc Create task
+ */
+app.post(
+  '/api/tasks',
+  [
+    auth, 
+    [
+      check('description', 'Task description is required')
+        .not()
+        .isEmpty()
+    ]
+  ],
+  async (req, res) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+      res.status(400).json({ errors: errors.array() })
+    } else {
+      const {
+        description,
+        //createUser, -- derived from request user below
+        assignedUser,
+        createDate,
+        completeDate
+      } = req.body
+      try {
+        // Get the user who created the task
+        const user = await User.findById(req.user.id)
+
+        // Create a new task
+        const task = new Task({
+          description: description,
+          createUser: user.id,
+          assignedUser: assignedUser,
+          createDate: createDate,
+          completeDate: completeDate
+        })
+
+        // Save to the db and return
+        await task.save()
+
+        res.json(task)
+      } catch (error) {
+        console.error(error)
+        res.status(500).send('Server error')
+      }
+    }
+  }
+)
+
+/**
+ * @route GET api/tasks
+ * @desc Get tasks
+ */
+app.get('/api/tasks', auth, async (req, res) => {
+  try {
+    const tasks = await Task.find().sort({ createDate: -1})
+
+    res.json(tasks)
+  } catch (error) {
+    console.error(error)
+    res.status(500).send('Server error')
+  }
+})
+
+/**
+ * @route GET api/tasks/:id
+ * @desc Get task
+ */
+app.get('/api/tasks/:id', auth, async (req, res) => {
+  try {
+    const task = await Task.findById(req.params.id);
+
+    // Make sure the Task was found
+    if (!task) {
+      return res.status(404).json({ msg: 'Task not found' });
+    }
+
+    res.json(task);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server error');
+  }
+});
+
+/**
+ * @route DELETE api/tasks/:id
+ * @desc Delete a task
+ */
+app.delete('/api/tasks/:id', auth, async (req, res) => {
+  try {
+    const task = await Task.findById(req.params.id);
+
+    // Make sure the task was found
+    if (!task) {
+      return res.status(404).json({ msg: 'Task not found' });
+    }
+
+    // Make sure the request user created the task
+    if (task.createUser.toString() !== req.user.id) {
+      return res.status(401).json({ msg: 'User not authorized' });
+    }
+
+    await task.remove();
+
+    res.json({ msg: 'Task removed' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server error');
+  }
+});
+
+/**
+ * @route PUT api/tasks/:id
+ * @desc Update a task
+ */
+app.put('/api/tasks/:id', auth, async (req, res) => {
+  try {
+    const { 
+      description,
+      createUser,
+      assignedUser,
+      createDate,
+      completeDate 
+      
+    } = req.body;
+    const task = await Task.findById(req.params.id);
+
+    // Make sure the task was found
+    if (!task) {
+      return res.status(404).json({ msg: 'Task not found' });
+    }
+
+    // Make sure the request user created the task
+    if (task.createUser.toString() !== req.user.id) {
+      return res.status(401).json({ msg: 'User not authorized' });
+    }
+
+    // Update the task and return
+    task.description = description || task.description;
+    task.createUser = createUser || task.createUser;
+    task.assignedUser = assignedUser || task.assignedUser;
+    task.createDate = createDate || task.createDate;
+    task.completeDate = completeDate || task.completeDate;
+
+    await task.save();
+
+    res.json(task);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server error');
+  }
+});
 
 // Serve build files in production
 if (process.env.NODE_ENV === 'production') {
